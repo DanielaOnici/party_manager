@@ -1,0 +1,81 @@
+﻿@model ManagePartyViewModel
+
+@{
+    ViewData["Title"] = "Manage your party";
+}
+
+<div>
+    <a asp-controller="Party" asp-action="GetAllParties">All parties</a>
+    <span class="mx-1">|</span>
+    <a asp-controller="Party" asp-action="GetAddPartyRequest">Add a new party</a>
+    <span class="mx-1">|</span>
+    <a asp-controller="Party" asp-action="GetEditPartyRequestById" asp-route-id="@Model.ActiveParty?.PartyId">Edit this party</a>
+    <h6 class="mt-3">Party summary:</h6>
+    <p>The party "@Model.ActiveParty?.Description" is at @Model.ActiveParty?.Location on @Model.ActiveParty?.EventDate?.ToString("d")</p>
+</div>
+<div>
+    <div>
+        <p>Invites not sent: @Model.NotSentCount    Sent count: @Model.SentCount    Yes count: @Model.YesCount  No count: @Model.NoCount</p>
+    </div>
+    <h6 class="mt-3">Invitations:</h6>
+    @if(Model.ActiveParty?.Invitations.Count > 0)
+    {
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>Guest Name</th>
+                    <th>Guest Email</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var invitation in Model.ActiveParty?.Invitations)
+                {
+                    <tr>
+                        <td>@invitation.GuestName</td>
+                        <td>@invitation.Email</td>
+                        <td>@invitation.Status</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p><em>No invitations yet - you should create some!</em></p>
+    }
+</div>
+<div class="row">
+    <div asp-validation-summary="All" class="text-danger" asp-validation-summary="All"></div>
+    <form class="row" asp-controller="Party"
+          asp-action="AddInvitationToPartyById" asp-route-id="@Model.ActiveParty?.PartyId"
+          method="post" enctype="application/x-www-form-urlencoded">
+        <div class="col-sm-5">
+            <label class="visually-hidden" asp-for="NewInvitation.GuestName">Guest Name</label>
+            <div class="input-group">
+                <div class="input-group-text">Guest Name</div>
+                <input type="text" class="form-control" asp-for="NewInvitation.GuestName" />
+            </div>
+        </div>
+
+        <div class="col-sm-5">
+            <label class="visually-hidden" asp-for="NewInvitation.Email">Email</label>
+            <div class="input-group">
+                <div class="input-group-text">Email</div>
+                <input type="text" class="form-control" asp-for="NewInvitation.Email" />
+            </div>
+        </div>
+
+        <div class="col-sm-2">
+            <button type="submit" class="btn btn-primary">Create invitation</button>
+        </div>
+    </form>
+</div>
+<div>
+    <h6 class="mt-3">Actions:</h6>
+    <form asp-controller="Party"
+          asp-action="SendInvitationsByPartyId" asp-route-id="@Model.ActiveParty?.PartyId"
+          method="post" enctype="application/x-www-form-urlencoded">
+        <button type="submit" class="btn btn-primary mb-5">Send invitation</button>
+    </form>
+</div>

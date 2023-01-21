@@ -1,0 +1,29 @@
+﻿@model PartyViewModel
+
+@{
+    ViewData["Title"] = "Edit a party";
+}
+
+<form asp-controller="Party" asp-action="ProcessEditPartyRequest" asp-route-id="@Model.ActiveParty.PartyId" method="post" enctype="application/x-www-form-urlencoded">
+    <div class="text-danger" asp-validation-summary="All"></div>
+
+    <div class="form-group">
+        <label asp-for="ActiveParty.Description">Description</label>
+        <input type="text" asp-for="ActiveParty.Description" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="ActiveParty.EventDate">Date of party</label>
+        <input type="datetime" asp-for="ActiveParty.EventDate" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="ActiveParty.Location">Location</label>
+        <input type="text" asp-for="ActiveParty.Location" class="form-control" />
+    </div>
+
+    <input type="hidden" asp-for="ActiveParty.PartyId" />
+
+    <button type="submit" class="btn btn-primary mt-2 mb-5">Edit</button>
+    <a asp-controller="Party" asp-action="GetAllParties" class="btn btn-primary mt-2 mb-5">Cancel</a>
+</form>

@@ -1,0 +1,35 @@
+﻿@model ManagePartyViewModel
+
+@{
+    ViewData["Title"] = "Invitation Response";
+}
+
+<div>
+    <h5 class="mt-4">You have been invited to the "@Model.NewInvitation?.Party?.Description"!</h5>
+    <p class="mt-3">Hi, @Model.NewInvitation?.GuestName! You have been invited to the @Model.NewInvitation?.Party?.Description at @Model.NewInvitation?.Party?.Location on @Model.NewInvitation?.Party?.EventDate - We would be thrilled to have join us!</p>
+</div>
+<div class="row">
+    <form asp-controller="Response" asp-action="ProcessResponseToTheInvitation" method="post" enctype="application/x-www-form-urlencoded">
+        <p>Will you attend?</p>
+        @foreach (InvitationStatus status in Enum.GetValues<InvitationStatus>())
+        {
+            if(status == InvitationStatus.RespondedYes)
+            {
+                <input type="radio" asp-for="NewInvitation.Status" value="@status" checked>
+                <label asp-for="NewInvitation.Status">Yes</label>
+            }
+            if(status == InvitationStatus.RespondedNo)
+            {
+                <input type="radio" asp-for="NewInvitation.Status" value="@status">
+                <label asp-for="NewInvitation.Status">No</label>
+            }
+        }
+        <input type="hidden" asp-for="NewInvitation.GuestName" value="@Model.NewInvitation?.GuestName" />
+        <input type="hidden" asp-for="NewInvitation.Email" value="@Model.NewInvitation?.Email" />
+        <input type="hidden" asp-for="NewInvitation.PartyId" value="@Model.NewInvitation?.PartyId" />
+        <input type="hidden" asp-for="NewInvitation.InvitationId" />
+        <div class="row-sm-2 mb-5">
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+    </form>
+</div>
